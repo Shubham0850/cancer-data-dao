@@ -1,5 +1,6 @@
-export const APP_NAME = 'Medusa'
-export const CIPHERTEXT_FILENAME = 'ciphertext';
+export const APP_NAME = 'Medusa' as const
+export const CIPHERTEXT_FILENAME = 'ciphertext' as const
+export const CONTRACT_ADDRESS = '0x0' as const
 
 // The <const> assertion enables wagmi to infer the correct types when using the ABI in hooks
 export const CONTRACT_ABI = <const>[

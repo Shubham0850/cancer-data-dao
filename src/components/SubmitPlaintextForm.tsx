@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 
-import { CIPHERTEXT_FILENAME, CONTRACT_ABI } from '@/lib/consts'
+import { CIPHERTEXT_FILENAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import { parseEther } from 'ethers/lib/utils'
 import storeCiphertext from '@/lib/storeCiphertext'
 import useGlobalStore from '@/stores/globalStore'
@@ -15,7 +15,7 @@ const SubmitPlaintextForm: FC = () => {
   const [cid, setCid] = useState('')
 
   const { config } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: 'createListing',
     args: [parseEther(price || '0.00'), ciphertextKey, `ipfs://${cid}/${CIPHERTEXT_FILENAME}`],
