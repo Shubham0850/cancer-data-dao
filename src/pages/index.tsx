@@ -36,9 +36,9 @@ const Home: FC = () => {
       </div>
       <ThemeSwitcher className="absolute bottom-6 right-6" />
       <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
-        <div className="flex justify-center pt-8 sm:justify-start sm:pt-0">
-          <h1 className="text-6xl font-mono font-bold dark:text-white">{APP_NAME}</h1>
-          <p className="text-xl mt-10 text-center font-light dark:text-gray-200">by medusa</p>
+        <div className="flex justify-center pt-8 sm:justify-start sm:pt-0 my-7">
+          <h1 className="text-6xl font-mono font-bold dark:text-white">{APP_NAME.toLowerCase()}</h1>
+          <p className="text-xl mt-10 text-center font-light dark:text-gray-200">by Medusa</p>
         </div>
         <ListingForm />
 
