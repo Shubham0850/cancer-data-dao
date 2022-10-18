@@ -34,31 +34,6 @@ export const CONTRACT_ABI = <const>[
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "seller",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "cipherId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "link",
-        "type": "bytes"
-      }
-    ],
-    "name": "NewListing",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "uint256",
         "name": "requestId",
@@ -95,7 +70,32 @@ export const CONTRACT_ABI = <const>[
         "type": "tuple"
       }
     ],
-    "name": "NewOracleResult",
+    "name": "ListingDecryption",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "cipherId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "uri",
+        "type": "bytes"
+      }
+    ],
+    "name": "NewListing",
     "type": "event"
   },
   {
@@ -116,7 +116,7 @@ export const CONTRACT_ABI = <const>[
       {
         "indexed": false,
         "internalType": "bytes",
-        "name": "link",
+        "name": "uri",
         "type": "bytes"
       }
     ],
@@ -197,7 +197,7 @@ export const CONTRACT_ABI = <const>[
       },
       {
         "internalType": "bytes",
-        "name": "link",
+        "name": "uri",
         "type": "bytes"
       }
     ],
@@ -210,31 +210,6 @@ export const CONTRACT_ABI = <const>[
       }
     ],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "distributedKey",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "x",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "y",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct G1Point",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -259,7 +234,7 @@ export const CONTRACT_ABI = <const>[
       },
       {
         "internalType": "bytes",
-        "name": "link",
+        "name": "uri",
         "type": "bytes"
       }
     ],
@@ -335,6 +310,31 @@ export const CONTRACT_ABI = <const>[
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "publicKey",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "x",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "y",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct G1Point",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",

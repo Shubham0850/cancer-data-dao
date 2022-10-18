@@ -3,16 +3,16 @@ import create from 'zustand'
 
 interface GlobalState {
   keypair: KeyPair<SecretKey, PublicKey<SecretKey>> | null
-  distributedKey: PublicKey<SecretKey> | null
+  medusaKey: PublicKey<SecretKey> | null
   updateKeypair: (keypair: KeyPair<SecretKey, PublicKey<SecretKey>>) => void
-  updateDistributedKey: (distributedKey: PublicKey<SecretKey>) => void
+  updateMedusaKey: (medusaKey: PublicKey<SecretKey>) => void
 }
 
 const useGlobalStore = create<GlobalState>()((set) => ({
   keypair: null,
-  distributedKey: null,
+  medusaKey: null,
   updateKeypair: (keypair: KeyPair<SecretKey, PublicKey<SecretKey>>) => set((state) => ({ keypair })),
-  updateDistributedKey: (distributedKey: PublicKey<SecretKey>) => set((state) => ({ distributedKey })),
+  updateMedusaKey: (medusaKey: PublicKey<SecretKey>) => set((state) => ({ medusaKey })),
 }))
 
 export default useGlobalStore
