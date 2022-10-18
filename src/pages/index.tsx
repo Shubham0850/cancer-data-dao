@@ -6,7 +6,7 @@ import { APP_NAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import ConnectWallet from '@/components/ConnectWallet'
 import Signin from '@/components/Signin'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
-import SubmitPlaintextForm from '@/components/SubmitPlaintextForm'
+import ListingForm from '@/components/ListingForm'
 import useGlobalStore from '@/stores/globalStore'
 
 const Home: FC = () => {
@@ -37,9 +37,10 @@ const Home: FC = () => {
       <ThemeSwitcher className="absolute bottom-6 right-6" />
       <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
         <div className="flex justify-center pt-8 sm:justify-start sm:pt-0">
-          <h1 className="text-6xl font-bold dark:text-white">{APP_NAME}</h1>
+          <h1 className="text-6xl font-mono font-bold dark:text-white">{APP_NAME}</h1>
+          <p className="text-xl mt-10 text-center font-light dark:text-gray-200">by medusa</p>
         </div>
-        <SubmitPlaintextForm />
+        <ListingForm />
 
       </div>
     </div>

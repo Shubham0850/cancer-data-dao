@@ -6,7 +6,7 @@ import { parseEther } from 'ethers/lib/utils'
 import storeCiphertext from '@/lib/storeCiphertext'
 import useGlobalStore from '@/stores/globalStore'
 
-const SubmitPlaintextForm: FC = () => {
+const ListingForm: FC = () => {
   const keypair = useGlobalStore((state) => state.keypair)
 
   const [price, setPrice] = useState('')

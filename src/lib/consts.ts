@@ -1,4 +1,4 @@
-export const APP_NAME = 'Medusa' as const
+export const APP_NAME = 'Only Files' as const
 export const CIPHERTEXT_FILENAME = 'ciphertext' as const
 export const CONTRACT_ADDRESS = '0x0' as const
 
