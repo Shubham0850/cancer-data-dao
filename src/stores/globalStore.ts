@@ -1,12 +1,13 @@
 import { KeyPair, SecretKey, PublicKey } from '@medusa-network/medusa-sdk'
+import { BigNumber } from 'ethers'
 import create from 'zustand'
 
 export interface Listing {
   seller: string
-  cipherId: string
+  cipherId: BigNumber
   name: string
   description: string
-  price: string
+  price: BigNumber
   uri: string
 }
 

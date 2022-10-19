@@ -28,7 +28,7 @@ const Listings: FC = () => {
     <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Buy Secrets</h1>
     <div className="flex flex-row mt-10 space-x-5">
 
-      {listings.map(listing => <Listing key={listing.cipherId} {...listing} />)}
+      {listings.map(listing => <Listing key={listing.cipherId.toNumber()} {...listing} />)}
     </div>
   </>
 }
