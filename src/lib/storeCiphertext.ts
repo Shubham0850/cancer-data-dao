@@ -1,6 +1,6 @@
 // Stores a ciphertext by submitting it to the endpoint in @/api/storeCiphertext.ts
 // Returns the CID from Web3.Storage
-export default async function storeCiphertext(ciphertext: string): Promise<string> {
+export default async function storeCiphertext(ciphertext: Uint8Array): Promise<string> {
   const endpoint = '/api/storeCiphertext'
 
   const options = {

@@ -1,31 +1,43 @@
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { arbitrumGoerli } from 'wagmi/chains'
+import { defaultCurve, HGamalSuite } from '@medusa-network/medusa-sdk'
 
 import { CIPHERTEXT_FILENAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import { parseEther } from 'ethers/lib/utils'
 import storeCiphertext from '@/lib/storeCiphertext'
 import useGlobalStore from '@/stores/globalStore'
+import { EVMCipher } from '@medusa-network/medusa-sdk/lib/hgamal'
 
 const ListingForm: FC = () => {
   const keypair = useGlobalStore((state) => state.keypair)
+  const medusaKey = useGlobalStore((state) => state.medusaKey)
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
 
   const [plaintext, setPlaintext] = useState('')
-  const [ciphertextKey, setCiphertextKey] = useState('')
+  const [ciphertextKey, setCiphertextKey] = useState<EVMCipher>()
   const [cid, setCid] = useState('')
 
-  const { config } = usePrepareContractWrite({
+  const { config, error: prepareError, isError: isPrepareError, isSuccess: readyToSendTransaction } = usePrepareContractWrite({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: 'createListing',
-    args: [parseEther(price || '0.00'), ciphertextKey, `ipfs://${cid}/${CIPHERTEXT_FILENAME}`],
+    args: [ciphertextKey, name, description, parseEther(price || '0.00'), `ipfs://${cid}/${name}`],
     enabled: Boolean(cid),
+    chainId: arbitrumGoerli.id
   })
 
-  const { data, write: createListing } = useContractWrite(config)
+  const { data, error, isError, write: createListing } = useContractWrite(config)
+
+  useEffect(() => {
+    if (readyToSendTransaction) {
+      createListing?.()
+      setCid('')
+    }
+  }, [readyToSendTransaction]);
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
@@ -33,19 +45,21 @@ const ListingForm: FC = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
+    console.log("Submitting new listing");
 
-    // TODO: Encrypt Plaintext
-    const ciphertext = plaintext
-
-    // TODO: Encrypt ciphertext key to the oracle's public key
-    setCiphertextKey('')
-
-    const cid = await storeCiphertext(ciphertext)
-    setCid(cid)
-    createListing?.()
+    const suite = new HGamalSuite(defaultCurve)
+    const buff = new TextEncoder().encode(plaintext.padEnd(32, "\0"));
+    try {
+      const bundle = (await suite.encryptToMedusa(buff, medusaKey))._unsafeUnwrap();
+      setCiphertextKey(bundle.encryptedKey.toEvm())
+      const cid = await storeCiphertext(bundle.encryptedData)
+      setCid(cid)
+      console.log(createListing)
+    } catch (e) {
+      console.log("Encryption or storeCiphertext API call Failed: ", e);
+    }
   }
 
-  // <span className="text-xl dark:text-white">Price</span>
   return (
     <>
       <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Create a Listing</h1>
@@ -98,7 +112,7 @@ const ListingForm: FC = () => {
               rows={3}
               placeholder="Buy access to the private key for the 0xdEaD address"
               value={description}
-              onChange={(e) => setPlaintext(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </label>
         </div>
@@ -108,12 +122,15 @@ const ListingForm: FC = () => {
         >
           <button
             type="submit"
-            disabled={!createListing || isLoading}
-            className="transition-colors bg-indigo-600 dark:bg-indigo-800 hover:bg-black dark:hover:bg-gray-50 dark:hover:text-gray-900 hover:cursor-pointer font-mono font-semibold mt-5 text-xl text-white py-4 px-4 rounded-sm"
+            disabled={isLoading || !keypair || !medusaKey}
+            className="font-mono font-semibold mt-5 text-xl text-white py-4 px-4 rounded-sm transition-colors bg-indigo-600 dark:bg-indigo-800 hover:bg-black dark:hover:bg-gray-50 dark:hover:text-gray-900 hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-25"
           >
-            {isLoading ? 'Submitting...' : 'Sell your Secret'}
+            {isLoading ? 'Submitting...' : keypair ? 'Sell your Secret' : 'Please sign in'}
           </button>
         </div>
+        {(isPrepareError || isError) && (
+          <div>Error: {(prepareError || error)?.message}</div>
+        )}
       </form >
       {
         isSuccess && (

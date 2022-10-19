@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
-import { PublicKey, SecretKey } from '@medusa-network/medusa-sdk'
+import { EVMPoint, HGamalEVM, PublicKey, SecretKey, init } from '@medusa-network/medusa-sdk'
+import { G1 } from '@medusa-network/medusa-sdk/lib/bn254'
 
 import { APP_NAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import ConnectWallet from '@/components/ConnectWallet'
@@ -20,12 +21,19 @@ const Home: FC = () => {
     abi: CONTRACT_ABI,
     functionName: 'publicKey',
     watch: false,
-    staleTime: Infinity,
-    enabled: Boolean(medusaKey),
-    // TODO: Convert this type properly from EVM G1Point
-    onSuccess: (medusaKey: PublicKey<SecretKey>) => {
-      console.log(medusaKey)
-      updateMedusaKey(medusaKey)
+    enabled: !Boolean(medusaKey),
+    onSuccess: async (medusaKey: EVMPoint) => {
+      await init()
+      try {
+        const key = new G1().fromEvm(medusaKey)._unsafeUnwrap()
+        console.log('Retrieved key from medusa oracle', key)
+        updateMedusaKey(key)
+      } catch (e) {
+        console.log("Failed to convert medusa key from EVMPoint: ", e);
+      }
+    },
+    onError: (e: any) => {
+      console.log('Error requesting medusa key from contract', e)
     }
   })
 
