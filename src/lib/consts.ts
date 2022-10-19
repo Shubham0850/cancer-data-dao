@@ -1,5 +1,4 @@
 export const APP_NAME = 'Only Files' as const
-export const CIPHERTEXT_FILENAME = 'ciphertext' as const
 export const CONTRACT_ADDRESS = '0xb3585cCB236333Fc72552bC54175f0e31087dbE0' as const
 
 // The <const> assertion enables wagmi to infer the correct types when using the ABI in hooks

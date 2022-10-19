@@ -3,11 +3,12 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import { arbitrumGoerli } from 'wagmi/chains'
 import { defaultCurve, HGamalSuite } from '@medusa-network/medusa-sdk'
 
-import { CIPHERTEXT_FILENAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import { parseEther } from 'ethers/lib/utils'
 import storeCiphertext from '@/lib/storeCiphertext'
 import useGlobalStore from '@/stores/globalStore'
 import { EVMCipher } from '@medusa-network/medusa-sdk/lib/hgamal'
+import { Base64 } from 'js-base64'
 
 const ListingForm: FC = () => {
   const keypair = useGlobalStore((state) => state.keypair)
@@ -52,7 +53,8 @@ const ListingForm: FC = () => {
     try {
       const bundle = (await suite.encryptToMedusa(buff, medusaKey))._unsafeUnwrap();
       setCiphertextKey(bundle.encryptedKey.toEvm())
-      const cid = await storeCiphertext(bundle.encryptedData)
+      const encodedCiphertext = Base64.encode(new TextDecoder('utf8').decode(bundle.encryptedData))
+      const cid = await storeCiphertext(name, encodedCiphertext)
       setCid(cid)
       console.log(createListing)
     } catch (e) {
