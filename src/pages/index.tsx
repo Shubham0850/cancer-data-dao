@@ -9,16 +9,19 @@ import Signin from '@/components/Signin'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import ListingForm from '@/components/ListingForm'
 import Listings from '@/components/Listings'
-import { Listing, default as useGlobalStore } from '@/stores/globalStore'
+import { Listing, Sale, Decryption, default as useGlobalStore } from '@/stores/globalStore'
 import { ethers } from 'ethers'
+import PurchasedSecrets from '@/components/PurchasedSecrets'
 
 const Home: FC = () => {
   const provider = useProvider()
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
 
   const updateMedusaKey = useGlobalStore((state) => state.updateMedusaKey)
   const medusaKey = useGlobalStore((state) => state.medusaKey)
   const updateListings = useGlobalStore((state) => state.updateListings)
+  const updateSales = useGlobalStore((state) => state.updateSales)
+  const updateDecryptions = useGlobalStore((state) => state.updateDecryptions)
 
   useContractRead({
     address: CONTRACT_ADDRESS,
@@ -49,8 +52,9 @@ const Home: FC = () => {
   })
 
   useEffect(() => {
-    const getListings = async () => {
+    const getEvents = async () => {
       const iface = new ethers.utils.Interface(CONTRACT_ABI)
+
       const newListingFilter = medusaFans.filters.NewListing()
       const newListings = await medusaFans.queryFilter(newListingFilter)
 
@@ -59,14 +63,38 @@ const Home: FC = () => {
           const result = iface.parseLog(filterTopic)
           const { seller, cipherId, name, description, price, uri } = result.args
           return { seller, cipherId, name, description, price, uri } as Listing
-          // console.log(result.args.name)
-          // console.log('result', result)
         })
         updateListings(listings)
       }
+
+      const listingDecryptionFilter = medusaFans.filters.ListingDecryption()
+      const listingDecryptions = await medusaFans.queryFilter(listingDecryptionFilter)
+
+      if (iface && listingDecryptions) {
+        const decryptions = listingDecryptions.reverse().map((filterTopic: any) => {
+          const result = iface.parseLog(filterTopic)
+          const { requestId, ciphertext } = result.args
+          return { requestId, ciphertext } as Decryption
+        })
+        updateDecryptions(decryptions)
+      }
+
+      if (!address) return
+
+      const newSaleFilter = medusaFans.filters.NewSale(address)
+      const newSales = await medusaFans.queryFilter(newSaleFilter)
+
+      if (iface && newSales) {
+        const sales = newSales.reverse().map((filterTopic: any) => {
+          const result = iface.parseLog(filterTopic)
+          const { buyer, seller, requestId, cipherId } = result.args
+          return { buyer, seller, requestId, cipherId } as Sale
+        })
+        updateSales(sales)
+      }
     }
-    getListings()
-  }, [])
+    getEvents()
+  }, [address])
 
   return (
     <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
@@ -80,6 +108,7 @@ const Home: FC = () => {
           <p className="text-xl mt-10 text-center font-light dark:text-gray-200">by Medusa</p>
         </div>
         <ListingForm />
+        <PurchasedSecrets />
         <Listings />
 
       </div>

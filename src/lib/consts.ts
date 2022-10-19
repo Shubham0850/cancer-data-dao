@@ -1,5 +1,5 @@
 export const APP_NAME = 'Only Files' as const
-export const CONTRACT_ADDRESS = '0xb3585cCB236333Fc72552bC54175f0e31087dbE0' as const
+export const CONTRACT_ADDRESS = '0xC5DB44A3c2D1315a4B32fDeBb5C7a85B2512d1f1' as const
 
 // The <const> assertion enables wagmi to infer the correct types when using the ABI in hooks
 export const CONTRACT_ABI = <const>[
@@ -33,7 +33,7 @@ export const CONTRACT_ABI = <const>[
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "requestId",
         "type": "uint256"
@@ -126,6 +126,18 @@ export const CONTRACT_ABI = <const>[
       },
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requestId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "cipherId",
         "type": "uint256"
