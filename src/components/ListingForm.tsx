@@ -19,6 +19,7 @@ const ListingForm: FC = () => {
   const [price, setPrice] = useState('')
 
   const [plaintext, setPlaintext] = useState('')
+  const [file, setFile] = useState<File>()
   const [ciphertextKey, setCiphertextKey] = useState<EVMCipher>()
   const [cid, setCid] = useState('')
 
@@ -49,11 +50,11 @@ const ListingForm: FC = () => {
     console.log("Submitting new listing");
 
     const suite = new HGamalSuite(defaultCurve)
-    const buff = new TextEncoder().encode(plaintext.padEnd(32, "\0"));
+    const buff = new TextEncoder().encode(plaintext)
     try {
       const bundle = (await suite.encryptToMedusa(buff, medusaKey))._unsafeUnwrap();
       setCiphertextKey(bundle.encryptedKey.toEvm())
-      const encodedCiphertext = Base64.encode(new TextDecoder('utf8').decode(bundle.encryptedData))
+      const encodedCiphertext = Base64.fromUint8Array(bundle.encryptedData);
       const cid = await storeCiphertext(name, encodedCiphertext)
       setCid(cid)
       console.log(createListing)
@@ -62,21 +63,54 @@ const ListingForm: FC = () => {
     }
   }
 
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0]
+    setName(file.name)
+    const reader = new FileReader()
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const plaintext = event.target?.result as string
+      setPlaintext(plaintext)
+    }
+    reader.onerror = (error) => {
+      console.log('File Input Error: ', error);
+    };
+  }
+
   return (
     <>
       <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Create a Listing</h1>
       <form onSubmit={handleSubmit}>
-        <label className="py-3 block">
-          <textarea
-            required
-            className="form-textarea mt-1 block w-full h-24 dark:bg-gray-800 dark:text-white"
-            rows={3}
-            placeholder="Enter your content"
-            value={plaintext}
-            onChange={(e) => setPlaintext(e.target.value)}
-          ></textarea>
-        </label>
-        <div className="flex flex-row space-x-5 mt-5">
+
+        <div className="flex flex-row items-center justify-center space-x-10">
+          <div className="flex items-center justify-center">
+            <label className="w-64 flex flex-col items-center px-4 py-6 rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-gray-800 hover:text-blue-400">
+              <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+              </svg>
+              <span className="mt-2 text-base leading-normal">Select a file</span>
+              <input type='file' className="hidden" onChange={handleFileChange} />
+            </label>
+          </div>
+
+          <div>
+            <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">OR</h1>
+          </div>
+          <div>
+            <label className="py-3 block">
+              <textarea
+                required
+                className="form-textarea mt-1 block w-full h-24 dark:bg-gray-800 dark:text-white"
+                rows={3}
+                placeholder="Enter your content"
+                value={plaintext}
+                onChange={(e) => setPlaintext(e.target.value)}
+              ></textarea>
+            </label>
+          </div>
+        </div>
+
+        <div className="flex flex-row items-center justify-center space-x-5 mt-5">
           <div>
             <label className="block">
               <span className="text-lg font-mono font-light dark:text-white my-4">Name</span>
