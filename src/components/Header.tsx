@@ -19,8 +19,8 @@ const Header: FC = () => {
             </a>
           </div>
           <nav className="space-x-10 md:flex">
-            <a href="https://goerli-faucet.pk910.de/" className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400">Faucet</a>
-            <a href="https://chainlist.org/" className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400">Add Arbitrum Goerli</a>
+            <a href="https://goerli-faucet.pk910.de/" target="_blank" className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400" rel="noreferrer">Faucet</a>
+            <a href="https://chainlist.org/" target="_blank" className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400" rel="noreferrer">Add Arbitrum Goerli</a>
           </nav>
           <div className="items-center justify-end flex flex-1 lg:w-0 space-x-3">
             <ThemeSwitcher />
