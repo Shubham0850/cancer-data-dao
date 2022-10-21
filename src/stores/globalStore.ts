@@ -43,6 +43,10 @@ interface GlobalState {
   updateListings: (listings: Listing[]) => void,
   updateSales: (sales: Sale[]) => void
   updateDecryptions: (decryptions: Decryption[]) => void
+
+  addListing: (listing: Listing) => void
+  addSale: (sale: Sale) => void
+  addDecryption: (decryption: Decryption) => void
 }
 
 const useGlobalStore = create<GlobalState>()((set) => ({
@@ -51,11 +55,16 @@ const useGlobalStore = create<GlobalState>()((set) => ({
   listings: [],
   sales: [],
   decryptions: [],
+
   updateKeypair: (keypair: KeyPair<SecretKey, PublicKey<SecretKey>> | null) => set((state) => ({ keypair })),
   updateMedusaKey: (medusaKey: PublicKey<SecretKey>) => set((state) => ({ medusaKey })),
   updateListings: (listings: Listing[]) => set((state) => ({ listings })),
   updateSales: (sales: []) => set((state) => ({ sales })),
   updateDecryptions: (decryptions: []) => set((state) => ({ decryptions })),
+
+  addListing: (listing: Listing) => set((state) => ({ listings: [listing, ...state.listings] })),
+  addSale: (sale: Sale) => set((state) => ({ sales: [sale, ...state.sales] })),
+  addDecryption: (decryption: Decryption) => set((state) => ({ decryptions: [decryption, ...state.decryptions] })),
 }))
 
 export default useGlobalStore

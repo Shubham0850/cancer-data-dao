@@ -1,14 +1,11 @@
+import { FC, useEffect, useState } from 'react'
 import Image from 'next/image'
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import useGlobalStore, { Sale } from '@/stores/globalStore'
 import { defaultCurve, EncryptionBundle, HGamalEVM, HGamalSuite } from '@medusa-network/medusa-sdk'
 import { newCiphertext } from '@medusa-network/medusa-sdk/lib/hgamal'
 import { BigNumber } from 'ethers'
 import { arrayify, formatEther, hexZeroPad } from 'ethers/lib/utils'
 import { Base64 } from 'js-base64'
-import { FC, useEffect, useState } from 'react'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { arbitrumGoerli } from 'wagmi/chains'
 
 function bnToArray(
   big: BigNumber,
@@ -39,6 +36,7 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
   const decryption = decryptions.find((d) => d.requestId.eq(requestId))
 
   const [plaintext, setPlaintext] = useState('')
+  const [downloadLink, setDownloadLink] = useState('')
 
   useEffect(() => {
     const decryptContent = async () => {
@@ -46,14 +44,13 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
 
       const { ciphertext } = decryption
 
+      console.log("Downloading encrypted content from ipfs")
       const ipfsDownload = `https://w3s.link/ipfs/${listing.uri.replace('ipfs://', '')}`
       const response = await fetch(ipfsDownload)
       const encryptedContents = await response.text()
-      console.log("Encrypted contents", encryptedContents)
 
       // Base64 decode into Uint8Array
       const encryptedData = Base64.toUint8Array(encryptedContents)
-      console.log("Encrypted bytearray", encryptedData)
 
       const suite = new HGamalSuite(defaultCurve)
 
@@ -63,23 +60,34 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
 
       // Convert the ciphertext to a format that the Medusa SDK can use
       const cipher = newCiphertext(defaultCurve).fromEvm(evmCipher)._unsafeUnwrap()
-      console.log("Cipher", cipher)
 
       // Create bundle with encrypted data and extraneous cipher (not used)
       const bundle = new EncryptionBundle(encryptedData, cipher)
 
       // Decrypt
-      const decryptionRes = await suite.decryptFromMedusa(keypair.secret, medusaKey, bundle, cipher)
-      console.log("Decryption result", decryptionRes)
+      try {
+        const decryptionRes = await suite.decryptFromMedusa(keypair.secret, medusaKey, bundle, cipher)
+        // Decode to string
+        const msg = new TextDecoder().decode(decryptionRes._unsafeUnwrap())
+        setPlaintext(msg)
+        console.log(msg)
+        if (isImage(msg)) {
+          const imgData = msg.split(',')[1]
+          setDownloadLink(window.URL.createObjectURL(
+            new Blob([Base64.toUint8Array(imgData)]),
+          ))
+        } else {
+          setDownloadLink(window.URL.createObjectURL(
+            new Blob([msg]),
+          ))
+        }
 
-      // Decode to string
-      const msg = new TextDecoder().decode(decryptionRes._unsafeUnwrap())
-      console.log("Decrypted contents", msg)
-
-      setPlaintext(msg)
+      } catch (e) {
+        setPlaintext("Decryption failed")
+      }
     }
     decryptContent()
-  }, [])
+  }, [decryption, keypair, medusaKey, listing.uri])
 
   const isImage = (data: string): Boolean => {
     return data.startsWith('data:image')
@@ -90,13 +98,17 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
       <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{listing.name}</h5>
       <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{listing.description}</p>
       <p className="mb-3">{BigNumber.from(0).eq(listing.price) ? "Free" : `${formatEther(listing.price)} ETH`} </p>
+      <a href={downloadLink} download={listing.name} className="inline-flex items-center text-blue-600 hover:underline">
+        Download
+        <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+      </a>
+
       <a href={listing.uri} target="_blank" className="inline-flex items-center text-blue-600 hover:underline" rel="noreferrer">
         View Encrypted on IPFS
         <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
       </a>
       {plaintext && isImage(plaintext) ?
-        <Image src={plaintext} width={300} height={300} /> :
-        // <img src={plaintext} width={300} height={300} /> :
+        <Image src={plaintext} width={300} height={300} alt="Decrypted Image" /> :
         <textarea
           readOnly
           disabled

@@ -1,21 +1,17 @@
-import { FC, useEffect } from 'react'
-import { useAccount, useContract, useContractEvent, useProvider } from 'wagmi'
-import { EVMPoint, HGamalEVM, PublicKey, SecretKey, init } from '@medusa-network/medusa-sdk'
-import { G1 } from '@medusa-network/medusa-sdk/lib/bn254'
+import { FC } from 'react'
+import { useAccount } from 'wagmi'
 
-import { APP_NAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import useGlobalStore from '@/stores/globalStore'
-import { ethers } from 'ethers'
 import Unlocked from './Unlocked'
 
 const PurchasedSecrets: FC = () => {
+  const { address } = useAccount()
   const sales = useGlobalStore((state) => state.sales)
 
   return <>
     <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Purchased Secrets</h1>
-    <div className="flex flex-row mt-10 space-x-5">
-
-      {sales.map(sale => <Unlocked key={sale.requestId.toNumber()} {...sale} />)}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 w-full">
+      {sales.filter(sale => sale.buyer == address).map(sale => <Unlocked key={sale.requestId.toNumber()} {...sale} />)}
     </div>
   </>
 }

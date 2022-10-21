@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react'
-import { useAccount, useContract, useContractRead, useProvider } from 'wagmi'
+import { useAccount, useContract, useContractEvent, useContractRead, useProvider } from 'wagmi'
 import { EVMPoint, HGamalEVM, PublicKey, SecretKey, init } from '@medusa-network/medusa-sdk'
 import { G1 } from '@medusa-network/medusa-sdk/lib/bn254'
 
@@ -22,6 +22,9 @@ const Home: FC = () => {
   const updateListings = useGlobalStore((state) => state.updateListings)
   const updateSales = useGlobalStore((state) => state.updateSales)
   const updateDecryptions = useGlobalStore((state) => state.updateDecryptions)
+  const addListing = useGlobalStore((state) => state.addListing)
+  const addSale = useGlobalStore((state) => state.addSale)
+  const addDecryption = useGlobalStore((state) => state.addDecryption)
 
   useContractRead({
     address: CONTRACT_ADDRESS,
@@ -42,6 +45,35 @@ const Home: FC = () => {
     onError: (e: any) => {
       console.log('Error requesting medusa key from contract', e)
     }
+  })
+
+  useContractEvent({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    eventName: 'NewListing',
+    listener(seller, cipherId, name, description, price, uri) {
+      addListing({ seller, cipherId, name, description, price, uri })
+    },
+  })
+
+  useContractEvent({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    eventName: 'NewSale',
+    listener(buyer, seller, requestId, cipherId) {
+      if (buyer === address) {
+        addSale({ buyer, seller, requestId, cipherId })
+      }
+    },
+  })
+
+  useContractEvent({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    eventName: 'ListingDecryption',
+    listener(requestId, ciphertext) {
+      addDecryption({ requestId, ciphertext })
+    },
   })
 
 
@@ -67,20 +99,6 @@ const Home: FC = () => {
         updateListings(listings)
       }
 
-      const listingDecryptionFilter = medusaFans.filters.ListingDecryption()
-      const listingDecryptions = await medusaFans.queryFilter(listingDecryptionFilter)
-
-      if (iface && listingDecryptions) {
-        const decryptions = listingDecryptions.reverse().map((filterTopic: any) => {
-          const result = iface.parseLog(filterTopic)
-          const { requestId, ciphertext } = result.args
-          return { requestId, ciphertext } as Decryption
-        })
-        updateDecryptions(decryptions)
-      }
-
-      if (!address) return
-
       const newSaleFilter = medusaFans.filters.NewSale(address)
       const newSales = await medusaFans.queryFilter(newSaleFilter)
 
@@ -91,6 +109,18 @@ const Home: FC = () => {
           return { buyer, seller, requestId, cipherId } as Sale
         })
         updateSales(sales)
+      }
+
+      const listingDecryptionFilter = medusaFans.filters.ListingDecryption()
+      const listingDecryptions = await medusaFans.queryFilter(listingDecryptionFilter)
+
+      if (iface && listingDecryptions) {
+        const decryptions = listingDecryptions.reverse().map((filterTopic: any) => {
+          const result = iface.parseLog(filterTopic)
+          const { requestId, ciphertext } = result.args
+          return { requestId, ciphertext } as Decryption
+        })
+        updateDecryptions(decryptions)
       }
     }
     getEvents()
