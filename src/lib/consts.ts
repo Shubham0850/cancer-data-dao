@@ -1,6 +1,5 @@
-export const APP_NAME = 'Medusa' as const
-export const CIPHERTEXT_FILENAME = 'ciphertext' as const
-export const CONTRACT_ADDRESS = '0x0' as const
+export const APP_NAME = 'Only Files' as const
+export const CONTRACT_ADDRESS = '0xC5DB44A3c2D1315a4B32fDeBb5C7a85B2512d1f1' as const
 
 // The <const> assertion enables wagmi to infer the correct types when using the ABI in hooks
 export const CONTRACT_ABI = <const>[
@@ -34,7 +33,7 @@ export const CONTRACT_ABI = <const>[
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "requestId",
         "type": "uint256"
@@ -83,16 +82,34 @@ export const CONTRACT_ABI = <const>[
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "cipherId",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "bytes",
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
         "name": "uri",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "name": "NewListing",
@@ -108,16 +125,22 @@ export const CONTRACT_ABI = <const>[
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
-        "name": "cipherId",
+        "name": "requestId",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "bytes",
-        "name": "uri",
-        "type": "bytes"
+        "internalType": "uint256",
+        "name": "cipherId",
+        "type": "uint256"
       }
     ],
     "name": "NewSale",
@@ -162,11 +185,6 @@ export const CONTRACT_ABI = <const>[
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
         "components": [
           {
             "components": [
@@ -196,9 +214,24 @@ export const CONTRACT_ABI = <const>[
         "type": "tuple"
       },
       {
-        "internalType": "bytes",
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
         "name": "uri",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "name": "createListing",
@@ -233,9 +266,9 @@ export const CONTRACT_ABI = <const>[
         "type": "uint256"
       },
       {
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "uri",
-        "type": "bytes"
+        "type": "string"
       }
     ],
     "stateMutability": "view",
