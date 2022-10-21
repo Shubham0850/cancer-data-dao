@@ -1,4 +1,5 @@
 import { FC, useEffect } from 'react'
+import Head from 'next/head'
 import { useAccount, useContract, useContractEvent, useContractRead, useProvider } from 'wagmi'
 import { EVMPoint, HGamalEVM, PublicKey, SecretKey, init } from '@medusa-network/medusa-sdk'
 import { G1 } from '@medusa-network/medusa-sdk/lib/bn254'
@@ -12,6 +13,7 @@ import Listings from '@/components/Listings'
 import { Listing, Sale, Decryption, default as useGlobalStore } from '@/stores/globalStore'
 import { ethers } from 'ethers'
 import PurchasedSecrets from '@/components/PurchasedSecrets'
+import Header from '@/components/Header'
 
 const Home: FC = () => {
   const provider = useProvider()
@@ -127,22 +129,24 @@ const Home: FC = () => {
   }, [address])
 
   return (
-    <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-      <div className="absolute top-6 right-6">
-        {isConnected ? <Signin /> : <ConnectWallet />}
-      </div>
-      <ThemeSwitcher className="absolute bottom-6 right-6" />
-      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
-        <div className="flex justify-center pt-8 sm:justify-start sm:pt-0 my-7">
-          <h1 className="text-6xl font-mono font-bold dark:text-white">{APP_NAME.toLowerCase()}</h1>
-          <p className="text-xl mt-10 text-center font-light dark:text-gray-200">by Medusa</p>
-        </div>
-        <ListingForm />
-        <PurchasedSecrets />
-        <Listings />
+    <>
+      <Head>
+        <title>Medusa - SecretRoad</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <Header />
+      <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-800 sm:items-center py-4 sm:pt-0">
+        <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
+          <div className="flex pt-8 justify-center sm:pt-0 my-7">
+            <h1 className="text-6xl font-mono font-light dark:text-white">{APP_NAME}</h1>
+          </div>
+          <ListingForm />
+          <PurchasedSecrets />
+          <Listings />
 
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

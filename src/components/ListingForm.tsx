@@ -82,7 +82,7 @@ const ListingForm: FC = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Create a Listing</h1>
+      <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Create a Secret</h1>
       <form onSubmit={handleSubmit}>
 
         <div className="flex flex-row items-center justify-center space-x-10">
