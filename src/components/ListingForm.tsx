@@ -95,22 +95,6 @@ const ListingForm: FC = () => {
               <input type='file' className="hidden" onChange={handleFileChange} />
             </label>
           </div>
-
-          <div>
-            <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">OR</h1>
-          </div>
-          <div>
-            <label className="py-3 block">
-              <textarea
-                required
-                className="form-textarea mt-1 block w-full h-24 dark:bg-gray-800 dark:text-white"
-                rows={3}
-                placeholder="Enter your content"
-                value={plaintext}
-                onChange={(e) => setPlaintext(e.target.value)}
-              ></textarea>
-            </label>
-          </div>
         </div>
 
         <div className="flex flex-row items-center justify-center space-x-5 mt-5">
