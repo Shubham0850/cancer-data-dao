@@ -70,7 +70,6 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
         // Decode to string
         const msg = new TextDecoder().decode(decryptionRes._unsafeUnwrap())
         setPlaintext(msg)
-        console.log(msg)
         if (isImage(msg)) {
           const imgData = msg.split(',')[1]
           setDownloadLink(window.URL.createObjectURL(
