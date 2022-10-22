@@ -1,12 +1,27 @@
+import { FC, useState } from 'react'
 import Link from 'next/link'
-import { FC } from 'react'
 import { useAccount } from 'wagmi'
+
+import requestFaucet from '@/lib/requestFaucet'
 import ConnectWallet from './ConnectWallet'
 import Signin from './Signin'
 import ThemeSwitcher from './ThemeSwitcher'
 
 const Header: FC = () => {
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
+  const [txHash, setTxHash] = useState('')
+  const [error, setError] = useState('')
+
+  const handleFaucet = async (event: any) => {
+    event.preventDefault()
+
+    try {
+      const _txHash = await requestFaucet(address)
+      setTxHash(_txHash)
+    } catch (e) {
+      setError(e.message)
+    }
+  }
 
   return (
     <div className="relative bg-gray-100 dark:bg-gray-800">
@@ -18,16 +33,22 @@ const Header: FC = () => {
               <img className="h-12 w-auto sm:h-16" src="/logo.png" alt="" />
             </a>
           </div>
-          <nav className="space-x-10 hidden sm:flex">
-            <a href="https://goerli-faucet.pk910.de/" target="_blank" className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400" rel="noreferrer">Faucet</a>
-            <a href="https://chainlist.org/" target="_blank" className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400" rel="noreferrer">Add Arbitrum Goerli</a>
-          </nav>
+
           <div className="items-center justify-end flex flex-1 lg:w-0 space-x-3">
+            <button
+              disabled={!address}
+              onClick={handleFaucet}
+              className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 disabled:cursor-not-allowed disabled:opacity-25"
+            >
+              Faucet
+            </button>
             <ThemeSwitcher />
             {isConnected ? <Signin /> : <ConnectWallet />}
           </div>
         </div>
       </div>
+      {txHash && <a href={`https://goerli.arbiscan.io/tx/${txHash}`} target="_blank" rel="noreferrer">Sent 0.01 ETH - View transaction</a>}
+      {error && <p>Faucet Error: {error}</p>}
     </div>
   )
 }
