@@ -140,7 +140,7 @@ const Home: FC = () => {
           <div className="flex pt-8 justify-center sm:pt-0 my-7">
             <h1 className="text-6xl font-mono font-light dark:text-white">{APP_NAME}</h1>
           </div>
-          <div className="flex pt-8 justify-center sm:pt-0 my-7">
+          <div className="flex justify-center sm:pt-0 my-7">
             <p className="text-lg font-mono font-light dark:text-white ml-2">Encrypt & upload your secret and set your price for people to see it!</p>
           </div>
           <ListingForm />

@@ -1,4 +1,4 @@
-export const APP_NAME = 'MoneyLock' as const
+export const APP_NAME = 'SecretRoad' as const
 export const CONTRACT_ADDRESS = '0xC5DB44A3c2D1315a4B32fDeBb5C7a85B2512d1f1' as const
 
 // The <const> assertion enables wagmi to infer the correct types when using the ABI in hooks
