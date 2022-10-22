@@ -131,14 +131,17 @@ const Home: FC = () => {
   return (
     <>
       <Head>
-        <title>Medusa - SecretRoad</title>
+        <title>{`Medusa - ${APP_NAME}`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Header />
       <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-800 sm:items-center py-4 sm:pt-0">
-        <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="flex pt-8 justify-center sm:pt-0 my-7">
             <h1 className="text-6xl font-mono font-light dark:text-white">{APP_NAME}</h1>
+          </div>
+          <div className="flex justify-center sm:pt-0 my-7">
+            <p className="text-lg font-mono font-light dark:text-white ml-2">Encrypt & upload your secret and set your price for people to see it!</p>
           </div>
           <ListingForm />
           <PurchasedSecrets />
