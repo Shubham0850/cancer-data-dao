@@ -93,7 +93,7 @@ const ListingForm: FC = () => {
           </label>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-8 text-center">
           <label className="block">
             <span className="text-lg font-mono font-light dark:text-white my-4">Name</span>
             <input
@@ -107,7 +107,7 @@ const ListingForm: FC = () => {
           </label>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-4 text-center">
           <label className="block">
             <span className="text-lg font-mono font-light dark:text-white my-4">Price</span>
             <input
@@ -121,7 +121,7 @@ const ListingForm: FC = () => {
           </label>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-4 text-center">
           <span className="text-lg font-mono font-light dark:text-white my-4">Description</span>
           <label className="py-3 block">
             <textarea
