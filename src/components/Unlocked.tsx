@@ -71,10 +71,10 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
         // Decode to string
         const msg = new TextDecoder().decode(decryptionRes._unsafeUnwrap())
         setPlaintext(msg)
-        if (isImage(msg)) {
-          const imgData = msg.split(',')[1]
+        if (isFile(msg)) {
+          const fileData = msg.split(',')[1]
           setDownloadLink(window.URL.createObjectURL(
-            new Blob([Base64.toUint8Array(imgData)]),
+            new Blob([Base64.toUint8Array(fileData)]),
           ))
         } else {
           setDownloadLink(window.URL.createObjectURL(
@@ -88,6 +88,10 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
     }
     decryptContent()
   }, [decryption, keypair, medusaKey, listing.uri])
+
+  const isFile = (data: string) => {
+    return data.startsWith('data:')
+  }
 
   const isImage = (data: string): Boolean => {
     return data.startsWith('data:image')
