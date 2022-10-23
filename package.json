@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
-    "@medusa-network/medusa-sdk": "0.0.1-rc1",
+    "@medusa-network/medusa-sdk": "0.0.1-rc5",
     "@tailwindcss/forms": "^0.5.3",
     "autoprefixer": "^10.4.7",
     "connectkit": "^0.0.2",

@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
-import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction, useAccount } from 'wagmi'
 import { arbitrumGoerli } from 'wagmi/chains'
-import { defaultCurve, HGamalSuite } from '@medusa-network/medusa-sdk'
+import { suite, HGamalSuite, Label } from '@medusa-network/medusa-sdk'
 
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import { parseEther } from 'ethers/lib/utils'
@@ -15,6 +15,7 @@ import { ipfsGatewayLink } from '@/lib/utils'
 const ListingForm: FC = () => {
   const keypair = useGlobalStore((state) => state.keypair)
   const medusaKey = useGlobalStore((state) => state.medusaKey)
+  const { address } = useAccount()
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -73,10 +74,11 @@ const ListingForm: FC = () => {
     setSubmitting(true)
     console.log("Submitting new listing");
 
-    const suite = new HGamalSuite(defaultCurve)
+    const hgamalSuite = new HGamalSuite(suite)
     const buff = new TextEncoder().encode(plaintext)
     try {
-      const bundle = (await suite.encryptToMedusa(buff, medusaKey))._unsafeUnwrap();
+      const label = Label.from(medusaKey, CONTRACT_ADDRESS, address);
+      const bundle = (await hgamalSuite.encryptToMedusa(buff, medusaKey, label))._unsafeUnwrap();
       setCiphertextKey(bundle.encryptedKey.toEvm())
       const encodedCiphertext = Base64.fromUint8Array(bundle.encryptedData);
 

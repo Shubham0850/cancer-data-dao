@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import Image from 'next/image'
 import useGlobalStore, { Sale } from '@/stores/globalStore'
-import { defaultCurve, EncryptionBundle, HGamalEVM, HGamalSuite } from '@medusa-network/medusa-sdk'
-import { newCiphertext } from '@medusa-network/medusa-sdk/lib/hgamal'
+import { suite, EncryptionBundle, HGamalEVM, HGamalSuite, HGamalCipher } from '@medusa-network/medusa-sdk'
 import { BigNumber } from 'ethers'
 import { arrayify, formatEther, hexZeroPad } from 'ethers/lib/utils'
 import { Base64 } from 'js-base64'
@@ -53,21 +52,21 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
       // Base64 decode into Uint8Array
       const encryptedData = Base64.toUint8Array(encryptedContents)
 
-      const suite = new HGamalSuite(defaultCurve)
+      const hgamalSuite = new HGamalSuite(suite)
 
       // Convert bignumber to hexstring, pad to 64 characters (32 bytes), convert to byte array
       const evmCipherArray = bnToArray(ciphertext.cipher, false, 32)
-      const evmCipher = new HGamalEVM(ciphertext.random, evmCipherArray)
+      const evmCipher = new HGamalEVM(ciphertext.random, evmCipherArray, ciphertext.random2, ciphertext.dleq)
 
       // Convert the ciphertext to a format that the Medusa SDK can use
-      const cipher = newCiphertext(defaultCurve).fromEvm(evmCipher)._unsafeUnwrap()
+      const cipher = HGamalCipher.default(suite).fromEvm(evmCipher)._unsafeUnwrap()
 
       // Create bundle with encrypted data and extraneous cipher (not used)
       const bundle = new EncryptionBundle(encryptedData, cipher)
 
       // Decrypt
       try {
-        const decryptionRes = await suite.decryptFromMedusa(keypair.secret, medusaKey, bundle, cipher)
+        const decryptionRes = await hgamalSuite.decryptFromMedusa(keypair.secret, medusaKey, bundle, cipher)
         // Decode to string
         const msg = new TextDecoder().decode(decryptionRes._unsafeUnwrap())
         setPlaintext(msg)

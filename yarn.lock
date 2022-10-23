@@ -881,12 +881,12 @@
     "@json-rpc-tools/types" "^1.7.6"
     "@pedrouid/environment" "^1.0.1"
 
-"@medusa-network/medusa-sdk@0.0.1-rc1":
-  version "0.0.1-rc1"
-  resolved "https://npm.pkg.github.com/download/@medusa-network/medusa-sdk/0.0.1-rc1/382648340b6bade25730914afc10c96066765809#382648340b6bade25730914afc10c96066765809"
-  integrity sha512-9jUuO+ie5q37GhYW8u3MfeBWyMG5s/JomGb7dQ41ZGR29CWFK8/frNwEumkfxhmxnCiJ7ppykAlyDA40Ae8ugQ==
+"@medusa-network/medusa-sdk@0.0.1-rc5":
+  version "0.0.1-rc5"
+  resolved "https://npm.pkg.github.com/download/@medusa-network/medusa-sdk/0.0.1-rc5/e66d9fd3fb56836a5c9beacd5f2c480442effab4#e66d9fd3fb56836a5c9beacd5f2c480442effab4"
+  integrity sha512-KkSgKkYWoVSiXhiEl/T/icxLOJXRtufRucs0NP619ugPD1tB499hG6GX6qpjgQwN0Xy1pL80uLdWo4KTezMlOQ==
   dependencies:
-    ethers "^5.6.6"
+    ffjavascript "^0.2.56"
     hardhat "^2.9.5"
     js-crypto-hkdf "^1.0.4"
     mcl-wasm "^1.0.2"
@@ -3841,7 +3841,7 @@ ethereumjs-util@^6.0.0, ethereumjs-util@^6.2.1:
     ethjs-util "0.1.6"
     rlp "^2.2.3"
 
-ethers@^5.6.6, ethers@^5.7.1:
+ethers@^5.7.1:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.1.tgz#48c83a44900b5f006eb2f65d3ba6277047fd4f33"
   integrity sha512-5krze4dRLITX7FpU8J4WscXqADiKmyeNlylmmDLbS95DaZpBhDe2YSwRQwKXWNyXcox7a3gBgm/MkGXV1O1S/Q==
@@ -3960,6 +3960,15 @@ fastq@^1.6.0:
   integrity sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==
   dependencies:
     reusify "^1.0.4"
+
+ffjavascript@^0.2.56:
+  version "0.2.56"
+  resolved "https://registry.yarnpkg.com/ffjavascript/-/ffjavascript-0.2.56.tgz#3509f98fcbd3e44ea93cd23519071b76d6eae433"
+  integrity sha512-em6G5Lrj7ucIqj4TYEgyoHs/j99Urwwqa4+YxEVY2hggnpRimVj+noX5pZQTxI1pvtiekZI4rG65JBf0xraXrg==
+  dependencies:
+    wasmbuilder "0.0.16"
+    wasmcurves "0.2.0"
+    web-worker "^1.2.0"
 
 file-entry-cache@^6.0.1:
   version "6.0.1"
@@ -7362,6 +7371,18 @@ wagmi@^0.7.5:
     abitype "^0.1.7"
     use-sync-external-store "^1.2.0"
 
+wasmbuilder@0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/wasmbuilder/-/wasmbuilder-0.0.16.tgz#f34c1f2c047d2f6e1065cbfec5603988f16d8549"
+  integrity sha512-Qx3lEFqaVvp1cEYW7Bfi+ebRJrOiwz2Ieu7ZG2l7YyeSJIok/reEQCQCuicj/Y32ITIJuGIM9xZQppGx5LrQdA==
+
+wasmcurves@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wasmcurves/-/wasmcurves-0.2.0.tgz#ccfc5a7d3778b6e0768b82a9336c80054f9bc0cf"
+  integrity sha512-3e2rbxdujOwaod657gxgmdhZNn+i1qKdHO3Y/bK+8E7bV8ttV/fu5FO4/WLBACF375cK0QDLOP+65Na63qYuWA==
+  dependencies:
+    wasmbuilder "0.0.16"
+
 web-encoding@1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/web-encoding/-/web-encoding-1.1.5.tgz#fc810cf7667364a6335c939913f5051d3e0c4864"
@@ -7375,6 +7396,11 @@ web-streams-polyfill@^3.1.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
+
+web-worker@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/web-worker/-/web-worker-1.2.0.tgz#5d85a04a7fbc1e7db58f66595d7a3ac7c9c180da"
+  integrity sha512-PgF341avzqyx60neE9DD+XS26MMNMoUQRz9NOZwW32nPQrF6p77f1htcnjBSEV8BGMKZ16choqUG4hyI0Hx7mA==
 
 web3.storage@^4.4.0:
   version "4.4.0"
