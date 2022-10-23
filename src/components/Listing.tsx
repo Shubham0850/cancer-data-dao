@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { arbitrumGoerli } from 'wagmi/chains'
 
-const Listing: FC<Listing> = ({ cipherId, uri, name, description, price }) => {
+const Listing: FC<Listing & { purchased: boolean }> = ({ cipherId, uri, name, description, price, purchased }) => {
   const { isConnected } = useAccount()
 
   const keypair = useGlobalStore((state) => state.keypair)
@@ -64,11 +64,11 @@ const Listing: FC<Listing> = ({ cipherId, uri, name, description, price }) => {
       <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description}</p>
       <p className="mb-3">{BigNumber.from(0).eq(price) ? "Free" : `${formatEther(price)} ETH`} </p>
       <button
-        disabled={!isConnected}
+        disabled={!isConnected || purchased}
         className="font-semibold mb-2 text-sm text-white py-2 px-3 rounded-sm transition-colors bg-indigo-600 dark:bg-indigo-800 hover:bg-black dark:hover:bg-gray-50 dark:hover:text-gray-900 hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-25"
         onClick={() => unlockSecret()}
       >
-        {isConnected ? 'Unlock Secret' : 'Connect your wallet'}
+        {purchased ? 'Purchased' : isConnected ? 'Unlock Secret' : 'Connect your wallet'}
       </button>
 
       <div>

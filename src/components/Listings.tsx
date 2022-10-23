@@ -2,9 +2,15 @@ import { FC } from 'react'
 
 import useGlobalStore from '@/stores/globalStore'
 import Listing from './Listing'
+import { useAccount } from 'wagmi'
 
 const Listings: FC = () => {
-  const listings = useGlobalStore((state) => state.listings)
+  const { address } = useAccount()
+  const sales = useGlobalStore((state) => state.sales)
+  const listings = useGlobalStore((state) => state.listings).map((listing) => {
+    return { ...listing, purchased: sales.some((sale) => sale.buyer === address && sale.cipherId.eq(listing.cipherId)) }
+
+  })
 
   return <>
     <h1 className="text-2xl font-mono font-light dark:text-white mt-10 mb-6">Buy Secrets</h1>
