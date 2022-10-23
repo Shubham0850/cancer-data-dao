@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react'
 import Head from 'next/head'
 import { useAccount, useContract, useContractEvent, useContractRead, useProvider } from 'wagmi'
 import { EVMPoint, HGamalEVM, PublicKey, SecretKey, init } from '@medusa-network/medusa-sdk'
-import { G1 } from '@medusa-network/medusa-sdk/lib/bn254'
+import { G1 } from '@medusa-network/medusa-sdk/lib/bn254_iden'
 
 import { APP_NAME, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/consts'
 import ConnectWallet from '@/components/ConnectWallet'

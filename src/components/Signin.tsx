@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useSignMessage } from 'wagmi'
-import { calculateKeyPair, defaultCurve, init } from '@medusa-network/medusa-sdk'
+import { calculateKeyPair, suite, init } from '@medusa-network/medusa-sdk'
 import useGlobalStore from '@/stores/globalStore'
 
 
@@ -12,7 +12,7 @@ const Signin: FC = () => {
     message: 'Sign in to Medusa',
     async onSuccess(data) {
       await init();
-      const keypair = calculateKeyPair(defaultCurve, data)
+      const keypair = calculateKeyPair(suite, data)
       updateKeypair(keypair)
     },
   })

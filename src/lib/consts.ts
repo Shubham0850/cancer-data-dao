@@ -1,5 +1,5 @@
 export const APP_NAME = 'SecretBay' as const
-export const CONTRACT_ADDRESS = '0xC5DB44A3c2D1315a4B32fDeBb5C7a85B2512d1f1' as const
+export const CONTRACT_ADDRESS = '0xDbf5B82C9b3Cd8291878b4d355368ab6e32b9A14' as const
 
 // The <const> assertion enables wagmi to infer the correct types when using the ABI in hooks
 export const CONTRACT_ABI = <const>[
@@ -61,6 +61,40 @@ export const CONTRACT_ABI = <const>[
             "internalType": "uint256",
             "name": "cipher",
             "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "x",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "y",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct G1Point",
+            "name": "random2",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "f",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "e",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DleqProof",
+            "name": "dleq",
+            "type": "tuple"
           }
         ],
         "indexed": false,
@@ -207,6 +241,40 @@ export const CONTRACT_ABI = <const>[
             "internalType": "uint256",
             "name": "cipher",
             "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "x",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "y",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct G1Point",
+            "name": "random2",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "f",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "e",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DleqProof",
+            "name": "dleq",
+            "type": "tuple"
           }
         ],
         "internalType": "struct Ciphertext",
@@ -317,6 +385,40 @@ export const CONTRACT_ABI = <const>[
             "internalType": "uint256",
             "name": "cipher",
             "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "x",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "y",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct G1Point",
+            "name": "random2",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "f",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "e",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct DleqProof",
+            "name": "dleq",
+            "type": "tuple"
           }
         ],
         "internalType": "struct Ciphertext",

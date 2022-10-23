@@ -24,6 +24,14 @@ export interface Ciphertext {
     y: BigNumber
   }
   cipher: BigNumber
+  random2: {
+    x: BigNumber
+    y: BigNumber
+  }
+  dleq: {
+    f: BigNumber
+    e: BigNumber
+  }
 }
 
 export interface Decryption {
