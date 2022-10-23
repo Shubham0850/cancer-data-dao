@@ -35,7 +35,7 @@ const Unlocked: FC<Sale> = ({ buyer, seller, requestId, cipherId }) => {
   const listing = listings.find((listing) => listing.cipherId.eq(cipherId))
   const decryption = decryptions.find((d) => d.requestId.eq(requestId))
 
-  const [plaintext, setPlaintext] = useState('')
+  const [plaintext, setPlaintext] = useState('Sign in to decrypt this secret')
   const [downloadLink, setDownloadLink] = useState('')
 
   useEffect(() => {
