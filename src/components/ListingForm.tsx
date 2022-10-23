@@ -9,6 +9,8 @@ import storeCiphertext from '@/lib/storeCiphertext'
 import useGlobalStore from '@/stores/globalStore'
 import { EVMCipher } from '@medusa-network/medusa-sdk/lib/hgamal'
 import { Base64 } from 'js-base64'
+import toast from 'react-hot-toast'
+import { ipfsGatewayLink } from '@/lib/utils'
 
 const ListingForm: FC = () => {
   const keypair = useGlobalStore((state) => state.keypair)
@@ -37,6 +39,7 @@ const ListingForm: FC = () => {
 
   useEffect(() => {
     if (readyToSendTransaction) {
+      toast.loading("Submitting secret to Medusa...")
       createListing?.()
       setCid('')
     }
@@ -44,6 +47,25 @@ const ListingForm: FC = () => {
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess: (txData) => {
+      toast.dismiss()
+      toast.success(
+        <a
+          href={`https://goerli.arbiscan.io/tx/${txData.transactionHash}`}
+          className="inline-flex items-center text-blue-600 hover:underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Secret successfully submitted to Medusa! View on Etherscan
+          <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+        </a>
+
+      )
+    },
+    onError: (e) => {
+      toast.dismiss()
+      toast.error(`Failed to submit secret to Medusa: ${e.message}`)
+    }
   })
 
   const handleSubmit = async (event: any) => {
@@ -57,9 +79,26 @@ const ListingForm: FC = () => {
       const bundle = (await suite.encryptToMedusa(buff, medusaKey))._unsafeUnwrap();
       setCiphertextKey(bundle.encryptedKey.toEvm())
       const encodedCiphertext = Base64.fromUint8Array(bundle.encryptedData);
-      const cid = await storeCiphertext(name, encodedCiphertext)
-      setCid(cid)
-      console.log(createListing)
+
+      toast.promise(
+        storeCiphertext(name, encodedCiphertext),
+        {
+          loading: 'Uploading encrypted secret to IPFS...',
+          success: (cid) => {
+            setCid(cid)
+            return <a
+              href={ipfsGatewayLink(cid)}
+              className="inline-flex items-center text-blue-600 hover:underline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View secret on IPFS
+              <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+            </a>
+          },
+          error: (error) => `Error uploading to IPFS: ${error.message}`
+        }
+      )
     } catch (e) {
       console.log("Encryption or storeCiphertext API call Failed: ", e);
     }
@@ -152,19 +191,6 @@ const ListingForm: FC = () => {
           )
         }
       </form >
-      {
-        isSuccess && (
-          <div>
-            Successfully listed your ciphertext!
-            <div>
-              <a href={`https://goerli.arbiscan.io/tx/${data?.hash}`} target="_blank" className="inline-flex items-center text-blue-600 hover:underline" rel="noreferrer">
-                View it on Etherscan
-                <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
-              </a>
-            </div>
-          </div>
-        )
-      }
     </>
   )
 }

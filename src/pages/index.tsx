@@ -14,6 +14,7 @@ import { Listing, Sale, Decryption, default as useGlobalStore } from '@/stores/g
 import { ethers } from 'ethers'
 import PurchasedSecrets from '@/components/PurchasedSecrets'
 import Header from '@/components/Header'
+import { Toaster } from 'react-hot-toast'
 
 const Home: FC = () => {
   const provider = useProvider()
@@ -134,7 +135,14 @@ const Home: FC = () => {
         <title>{`Medusa - ${APP_NAME}`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+
+      <Toaster
+        position="top-center"
+        reverseOrder={true}
+      />
+
       <Header />
+
       <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-800 sm:items-center py-4 sm:pt-0">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="flex pt-8 justify-center sm:pt-0 my-7">
@@ -143,8 +151,11 @@ const Home: FC = () => {
           <div className="flex justify-center sm:pt-0 my-7">
             <p className="text-lg font-mono font-light dark:text-white ml-2">Encrypt & upload your secret and set your price for people to see it!</p>
           </div>
+
           <ListingForm />
+
           <PurchasedSecrets />
+
           <Listings />
 
         </div>

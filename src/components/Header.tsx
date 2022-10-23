@@ -6,21 +6,30 @@ import requestFaucet from '@/lib/requestFaucet'
 import ConnectWallet from './ConnectWallet'
 import Signin from './Signin'
 import ThemeSwitcher from './ThemeSwitcher'
+import toast from 'react-hot-toast'
 
 const Header: FC = () => {
   const { isConnected, address } = useAccount()
-  const [txHash, setTxHash] = useState('')
-  const [error, setError] = useState('')
 
   const handleFaucet = async (event: any) => {
     event.preventDefault()
 
-    try {
-      const _txHash = await requestFaucet(address)
-      setTxHash(_txHash)
-    } catch (e) {
-      setError(e.message)
-    }
+    toast.promise(
+      requestFaucet(address),
+      {
+        loading: 'Requesting faucet...',
+        success: (txHash) => <a
+          href={`https://goerli.arbiscan.io/tx/${txHash}`}
+          className="inline-flex items-center text-blue-600 hover:underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Sending 0.01 ETH to your wallet - View on Etherscan
+          <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+        </a>,
+        error: (error) => `Error requesting faucet: ${error.message}`
+      }
+    )
   }
 
   return (
@@ -47,8 +56,6 @@ const Header: FC = () => {
           </div>
         </div>
       </div>
-      {txHash && <a href={`https://goerli.arbiscan.io/tx/${txHash}`} target="_blank" rel="noreferrer">Sent 0.01 ETH - View transaction</a>}
-      {error && <p>Faucet Error: {error}</p>}
     </div>
   )
 }
