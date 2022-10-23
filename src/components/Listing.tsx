@@ -5,10 +5,12 @@ import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { FC } from 'react'
 import toast from 'react-hot-toast'
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { arbitrumGoerli } from 'wagmi/chains'
 
-const Listing: FC<Listing> = ({ cipherId, uri, name, description, price }) => {
+const Listing: FC<Listing & { purchased: boolean }> = ({ cipherId, uri, name, description, price, purchased }) => {
+  const { isConnected } = useAccount()
+
   const keypair = useGlobalStore((state) => state.keypair)
   let evmPoint = null;
   if (keypair) {
@@ -61,9 +63,14 @@ const Listing: FC<Listing> = ({ cipherId, uri, name, description, price }) => {
       <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">{name}</h5>
       <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description}</p>
       <p className="mb-3">{BigNumber.from(0).eq(price) ? "Free" : `${formatEther(price)} ETH`} </p>
-      <button onClick={() => unlockSecret()} className="mb-2 inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Unlock Secret
+      <button
+        disabled={!isConnected || purchased}
+        className="font-semibold mb-2 text-sm text-white py-2 px-3 rounded-sm transition-colors bg-indigo-600 dark:bg-indigo-800 hover:bg-black dark:hover:bg-gray-50 dark:hover:text-gray-900 hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-25"
+        onClick={() => unlockSecret()}
+      >
+        {purchased ? 'Purchased' : isConnected ? 'Unlock Secret' : 'Connect your wallet'}
       </button>
+
       <div>
         <a href={ipfsGatewayLink(uri)} target="_blank" className="inline-flex items-center text-blue-600 hover:underline" rel="noreferrer">
           View on IPFS
