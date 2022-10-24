@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useAccount, useContract, useContractEvent, useContractRead, useProvider } from 'wagmi'
 import { EVMPoint, HGamalEVM, PublicKey, SecretKey, init } from '@medusa-network/medusa-sdk'
@@ -15,10 +15,19 @@ import { ethers } from 'ethers'
 import PurchasedSecrets from '@/components/PurchasedSecrets'
 import Header from '@/components/Header'
 import { Toaster } from 'react-hot-toast'
+import { useTheme } from 'next-themes'
 
 const Home: FC = () => {
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  // Necessary to avoid "Hyrdation Mismatch" between server and client
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const provider = useProvider()
-  const { isConnected, address } = useAccount()
+
+  const { address } = useAccount()
 
   const updateMedusaKey = useGlobalStore((state) => state.updateMedusaKey)
   const medusaKey = useGlobalStore((state) => state.medusaKey)
@@ -147,9 +156,23 @@ const Home: FC = () => {
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="flex pt-8 justify-center sm:pt-0 my-7">
             <h1 className="text-6xl font-mono font-light dark:text-white">{APP_NAME}</h1>
+            <svg version="1.1" fill={mounted && resolvedTheme === "dark" ? "white" : "black"} id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+              width="48.45px" height="48.45px" viewBox="0 0 48.45 48.45" xmlSpace="preserve"
+            >
+              <g>
+                <path d="M39.231,10.355C39.231,4.645,32.499,0,24.225,0C15.951,0,9.219,4.645,9.219,10.355c0,5.394,6.009,9.832,13.648,10.307
+		v0.433h-1.966v1.986h1.966V36.16h-4.289v-0.74h-2.156v4.042h2.156v-0.739h4.289v2.692h-4.289v-0.74h-2.156v4.042h2.156v-0.738
+		h4.289v1.613h-1.072v2.858h5.695v-2.858h-1.597v-1.613h3.979v0.738h2.156v-4.042h-2.156v0.74h-3.979v-2.692h3.979v0.739h2.156
+		V35.42h-2.156v0.74h-3.979V23.081h1.888v-1.986h-1.888v-0.454C33.385,20.066,39.231,15.675,39.231,10.355z M27.136,4.062
+		l4.672,0.065c2.983,1.437,4.92,3.69,4.92,6.229c0,1.768-0.946,3.396-2.522,4.709l-5.582,0.787l-4.145-0.8l1.43-2.863V8.564
+		l-1.792-3.3L27.136,4.062z M16.692,16.606c-3.012-1.435-4.969-3.7-4.969-6.251c0-2.036,1.251-3.887,3.282-5.284l5.379-0.921
+		l3.312,1.198l-1.768,3.566v2.956l1.748,3.293l-2.878,1.146L16.692,16.606z"/>
+              </g>
+            </svg>
+
           </div>
           <div className="flex justify-center sm:pt-0 my-7">
-            <p className="text-lg font-mono font-light dark:text-white ml-2">Encrypt & upload your secret and set your price for people to see it!</p>
+            <p className="text-lg font-mono font-light dark:text-white ml-2">Encrypt & upload your content and set your price for people to see it!</p>
           </div>
 
           <ListingForm />
