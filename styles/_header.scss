@@ -1,0 +1,57 @@
+.header {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    padding-top: 50px;
+
+    &__container {
+        width: 100%;
+        height: 100vh;
+
+        @include center;
+    }
+
+    &__row {
+        width: 100%;
+        margin: 0 auto;
+
+        @media only screen and (max-width: 600px){
+            flex-direction: column-reverse;
+        }
+    }
+
+    &__col {
+        @include center;
+    }
+
+    &__box{
+        padding: 150px 0px;
+    }
+}
+
+.bg::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px); /* apply the blur */
+    pointer-events: none; /* make the overlay click-through */
+}
+
+.bg {
+    position: fixed;
+    top: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100vh;
+    background: no-repeat;
+    background-image: url("https://assets.newatlas.com/dims4/default/3e016d8/2147483647/strip/true/crop/2000x1125+0+0/resize/2000x1125!/quality/90/?url=http%3A%2F%2Fnewatlas-brightspot.s3.amazonaws.com%2Fc1%2F1a%2Fc1b699ea4b08907be465107d9dc8%2Fdepositphotos-170019090-l.jpg");
+    background-size: cover;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .header{
+        padding-top: 100px;
+    }
+}
