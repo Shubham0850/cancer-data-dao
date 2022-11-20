@@ -1,0 +1,141 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&display=swap');
+
+// MIXINS
+@mixin center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// VARIABLES
+$font-primary: 'Krona One';
+$font-secondary: 'Krona One';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $font-primary;
+}
+
+// TYPOGRAPHY
+.h1 {
+    font-family: $font-secondary;
+    font-size: 65px !important;
+    color: #fff;
+}
+.p {
+    color: #fff;
+    font-size: 15px;
+}
+.h3 {
+    font-family: $font-secondary;
+    color: #fff;
+    font-size: 18px !important;
+}
+.h2{
+    color: #fff;
+    
+}
+
+@media only screen and (max-width: 600px) {
+    .h1 {
+        font-size: 2em !important;
+    }
+    .p {
+        font-size: 12px;
+    }
+}
+
+// BASE STYLE
+.cont {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.icon{
+    font-size: 25px;
+    margin: 0 10px;
+}
+.btns {
+    width: auto;
+    padding: 10px 30px;
+    outline: none;
+    border: none;
+    border-radius: 25px;
+    overflow: hidden;
+    font-size: 15px;
+    color: #fff;
+
+    background: linear-gradient(90deg, #60bbe9 0.05%, #2890eb 100.16%);
+    transition: all 0.5s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+
+    &--connected {
+        max-width: 200px;
+        overflow: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &--border{
+        background: transparent;
+        border: 2px solid #60bbe9;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .hide-on-phone {
+        display: none !important;
+    }
+    .sm-mb-5 {
+        margin-bottom: 30px;
+    }
+}
+
+.hide-on-pc {
+    @media only screen and (min-width: 601px) {
+        display: none;
+    }
+}
+
+// OVERWRITE VALUE
+a{
+    text-decoration: none;
+    color: rgb(42, 41, 41);
+
+    &:hover{
+        text-decoration: underline;
+    }
+}
+p {
+    margin: 0px;
+}
+ion-icon {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: radial-gradient(18.02% 49.93% at 55.58% 50.07%, #b1d26f 0%, #b1d26f 0.01%, #60e7ce 100%);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #fff;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}

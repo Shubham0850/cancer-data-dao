@@ -1,5 +1,4 @@
 import { FC, useState } from 'react'
-import Link from 'next/link'
 import { useAccount } from 'wagmi'
 
 import requestFaucet from '@/lib/requestFaucet'
@@ -8,7 +7,7 @@ import Signin from './Signin'
 import ThemeSwitcher from './ThemeSwitcher'
 import toast from 'react-hot-toast'
 
-const Header: FC = () => {
+const Nav: FC = () => {
   const { isConnected, address } = useAccount()
 
   const handleFaucet = async (event: any) => {
@@ -33,13 +32,12 @@ const Header: FC = () => {
   }
 
   return (
-    <div className="relative bg-gray-100 dark:bg-gray-800">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex items-center justify-between border-b-2 border-black dark:border-gray-100 py-6 md:justify-start md:space-x-10">
+    <div className="relative">
+      <div className="mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="https://medusanet.xyz">
-              <span className="sr-only">Medusa</span>
-              <img className="h-12 w-auto sm:h-16" src="/logo.png" alt="" />
+            <a href="/">
+            <h3 className="h3">🧬Cure DA💿</h3>
             </a>
           </div>
 
@@ -47,11 +45,11 @@ const Header: FC = () => {
             <button
               disabled={!address}
               onClick={handleFaucet}
-              className="text-base font-medium text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 disabled:cursor-not-allowed disabled:opacity-25"
+              className="btns"
             >
               Faucet
             </button>
-            <ThemeSwitcher />
+            {/* <ThemeSwitcher /> */}
             {isConnected ? <Signin /> : <ConnectWallet />}
           </div>
         </div>
@@ -59,4 +57,4 @@ const Header: FC = () => {
     </div>
   )
 }
-export default Header
+export default Nav

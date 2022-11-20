@@ -1,16 +1,37 @@
-import 'tailwindcss/tailwind.css'
-import { ThemeProvider } from 'next-themes'
+import "../styles/main.scss";
+import "bootstrap/dist/css/bootstrap.css";
 
-import Web3Provider from '@/components/Web3Provider'
 
-const App = ({ Component, pageProps }) => {
+import Head from "next/head";
+import Web3Provider from "@/components/Web3Provider";
+import Footer from "@/components/home/Footer";
+import Nav from "@/components/Header";
+
+function Layout({ children }) {
   return (
-    <ThemeProvider attribute="class">
-      <Web3Provider>
-        <Component {...pageProps} />
-      </Web3Provider>
-    </ThemeProvider>
-  )
+    <Web3Provider>
+      <Nav />
+      {children}
+      <Footer />
+    </Web3Provider>
+  );
 }
 
-export default App
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, width=device-width"
+          key="viewport"
+        />
+      </Head>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </>
+  );
+}
+
+export default MyApp;

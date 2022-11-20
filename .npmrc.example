@@ -1,3 +1,0 @@
-//npm.pkg.github.com/:_authToken={GITHUB_AUTH_TOKEN}
-@medusa-network:registry=https://npm.pkg.github.com
-always-auth=true

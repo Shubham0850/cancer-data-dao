@@ -9,7 +9,9 @@ const ConnectWallet: FC<{ show?: Visibility }> = ({ show = 'always' }) => {
 
 	if ((show == 'connected' && !isConnected) || (show == 'not_connected' && isConnected)) return null
 
-	return <ConnectKitButton />
+	return <div >
+		<ConnectKitButton />
+	</div>
 }
 
 export default ConnectWallet

@@ -3,6 +3,8 @@
 export default async function storeCiphertext(name: string, ciphertext: string): Promise<string> {
   const endpoint = '/api/storeCiphertext'
 
+  
+
   const options = {
     method: 'POST',
     headers: {
