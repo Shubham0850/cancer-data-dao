@@ -5,8 +5,8 @@ import "./interfaces/IMedusa.sol";
 
 
 contract CureDao {
-    address private TREASURY = 0xC3A3362DC30588a027767063459dC533Dc4A421a;
-    address private MEDUSA = 0xDbf5B82C9b3Cd8291878b4d355368ab6e32b9A14;
+    address private constant TREASURY = 0xC3A3362DC30588a027767063459dC533Dc4A421a;
+    address private constant MEDUSA = 0xDbf5B82C9b3Cd8291878b4d355368ab6e32b9A14;
 
     function addData(uint256[] memory  cipher, string memory name, string memory description, uint256 price, string memory uri) external {
         IMedusa(MEDUSA).createListing(cipher, name, description, price, uri);
