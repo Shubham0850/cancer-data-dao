@@ -213,9 +213,9 @@ library CommonTypes {
         string label;
         int64 start_epoch;
         int64 end_epoch;
-        int storage_price_per_epoch;
-        int provider_collateral;
-        int client_collateral;
+        int256 storage_price_per_epoch;
+        int256 provider_collateral;
+        int256 client_collateral;
     }
 
     struct ClientDealProposal {

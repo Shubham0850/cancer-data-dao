@@ -33,11 +33,7 @@ contract MinerAPI {
     /// @notice Income and returned collateral are paid to this address
     /// @notice This address is also allowed to change the worker address for the miner
     /// @return the owner address of a Miner
-    function get_owner()
-        public
-        view
-        returns (MinerTypes.GetOwnerReturn memory)
-    {
+    function get_owner() public view returns (MinerTypes.GetOwnerReturn memory) {
         require(bytes(owner).length != 0);
 
         return MinerTypes.GetOwnerReturn(owner);
@@ -52,22 +48,17 @@ contract MinerAPI {
 
     /// @param params The "controlling" addresses are the Owner, the Worker, and all Control Addresses.
     /// @return Whether the provided address is "controlling".
-    function is_controlling_address(
-        MinerTypes.IsControllingAddressParam memory params
-    ) public pure returns (MinerTypes.IsControllingAddressReturn memory) {
+    function is_controlling_address(MinerTypes.IsControllingAddressParam memory params)
+        public
+        pure
+        returns (MinerTypes.IsControllingAddressReturn memory)
+    {
         return MinerTypes.IsControllingAddressReturn(false);
     }
 
     /// @return the miner's sector size.
-    function get_sector_size()
-        public
-        view
-        returns (MinerTypes.GetSectorSizeReturn memory)
-    {
-        return
-            MinerTypes.GetSectorSizeReturn(
-                sectorSizesBytes[CommonTypes.SectorSize._8MiB]
-            );
+    function get_sector_size() public view returns (MinerTypes.GetSectorSizeReturn memory) {
+        return MinerTypes.GetSectorSizeReturn(sectorSizesBytes[CommonTypes.SectorSize._8MiB]);
     }
 
     /// @notice This is calculated as actor balance - (vesting funds + pre-commit deposit + initial pledge requirement + fee debt)
@@ -82,17 +73,9 @@ contract MinerAPI {
     }
 
     /// @return the funds vesting in this miner as a list of (vesting_epoch, vesting_amount) tuples.
-    function get_vesting_funds()
-        public
-        pure
-        returns (MinerTypes.GetVestingFundsReturn memory)
-    {
-        CommonTypes.VestingFunds[]
-            memory vesting_funds = new CommonTypes.VestingFunds[](1);
-        vesting_funds[0] = CommonTypes.VestingFunds(
-            1668514825,
-            2000000000000000000000
-        );
+    function get_vesting_funds() public pure returns (MinerTypes.GetVestingFundsReturn memory) {
+        CommonTypes.VestingFunds[] memory vesting_funds = new CommonTypes.VestingFunds[](1);
+        vesting_funds[0] = CommonTypes.VestingFunds(1668514825, 2000000000000000000000);
 
         return MinerTypes.GetVestingFundsReturn(vesting_funds);
     }
@@ -100,16 +83,14 @@ contract MinerAPI {
     /// @notice Proposes or confirms a change of beneficiary address.
     /// @notice A proposal must be submitted by the owner, and takes effect after approval of both the proposed beneficiary and current beneficiary, if applicable, any current beneficiary that has time and quota remaining.
     /// @notice See FIP-0029, https://github.com/filecoin-project/FIPs/blob/master/FIPS/fip-0029.md
-    function change_beneficiary(
-        MinerTypes.ChangeBeneficiaryParams memory params
-    ) public {
+    function change_beneficiary(MinerTypes.ChangeBeneficiaryParams memory params) public {
         if (!isBeneficiarySet) {
-            CommonTypes.BeneficiaryTerm memory term = CommonTypes
-                .BeneficiaryTerm(params.new_quota, 0, params.new_expiration);
-            activeBeneficiary = CommonTypes.ActiveBeneficiary(
-                params.new_beneficiary,
-                term
+            CommonTypes.BeneficiaryTerm memory term = CommonTypes.BeneficiaryTerm(
+                params.new_quota,
+                0,
+                params.new_expiration
             );
+            activeBeneficiary = CommonTypes.ActiveBeneficiary(params.new_beneficiary, term);
             isBeneficiarySet = true;
         } else {
             activeBeneficiary.beneficiary = params.new_beneficiary;
@@ -120,11 +101,7 @@ contract MinerAPI {
 
     /// @notice This method is for use by other actors (such as those acting as beneficiaries), and to abstract the state representation for clients.
     /// @notice Retrieves the currently active and proposed beneficiary information.
-    function get_beneficiary()
-        public
-        view
-        returns (MinerTypes.GetBeneficiaryReturn memory)
-    {
+    function get_beneficiary() public view returns (MinerTypes.GetBeneficiaryReturn memory) {
         require(isBeneficiarySet);
 
         CommonTypes.PendingBeneficiaryChange memory proposed;

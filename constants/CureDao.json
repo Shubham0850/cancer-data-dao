@@ -1,0 +1,48 @@
+[
+  {
+    "type": "function",
+    "name": "addData",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256[]", "name": "cipher" },
+      { "type": "string", "name": "name" },
+      { "type": "string", "name": "description" },
+      { "type": "uint256", "name": "price" },
+      { "type": "string", "name": "uri" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "buyData",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "cipherId" },
+      { "type": "uint256[]", "name": "buyerPublicKey" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getListing",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "cipherId" }],
+    "outputs": [
+      { "type": "address", "name": "seller" },
+      { "type": "uint256", "name": "price" },
+      { "type": "string", "name": "uri" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "withdrawPayments",
+    "constant": false,
+    "payable": false,
+    "inputs": [],
+    "outputs": []
+  }
+]
